@@ -5,6 +5,7 @@ requirejs.config({
     baseUrl: 'js',
 
     paths: {
+        text: 'lib/text'
     },
 
     shim: {
