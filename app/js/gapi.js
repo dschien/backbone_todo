@@ -40,6 +40,7 @@ define(['api-config'], function (config) {
 
                 app.views.auth.$el.hide();
                 $('#signed-in-container').show();
+                self.trigger('ready'); // This one
             } else {
                 if (authResult && authResult.error) {
                     // TODO: Show error
@@ -93,8 +94,22 @@ define(['api-config'], function (config) {
                 break;
 
             case 'read':
+                var request = gapi.client.tasks[model.url].list(options.data);
+                Backbone.gapiRequest(request, method, model, options);
                 break;
         }
+    };
+
+    Backbone.gapiRequest = function(request, method, model, options) {
+        var result;
+        request.execute(function(res) {
+            if (res.error) {
+                if (options.error) options.error(res);
+            } else if (options.success) {
+                result = res.items;
+                options.success(result, true, request);
+            }
+        });
     };
 
     return ApiManager;
