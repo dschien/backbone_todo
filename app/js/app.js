@@ -25,11 +25,13 @@ define(['gapi'
     App.prototype = {
         views: {},
         collections: {},
+        models: {},
         connectGapi: function() {
             var self = this;
             this.apiManager = new ApiManager(this);
             this.apiManager.on('ready', function() {
                 self.collections.lists.fetch({ data: { userId: '@me' }, success: function(res) {
+                    self.models.activeList = self.collections.lists.first();
                     self.views.listMenu.render();
                 }});
             });
